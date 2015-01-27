@@ -26,8 +26,15 @@ myWorker.settings = {
   n2: 500
 }
 
-function initParticles() {
-  myWorker.eventMessage.postMessage([]);
+var nodeItems = [];
+
+function addParticles() {
+  myWorker.eventMessage.postMessage(nodeItems.slice(messageCount * 1000, (messageCount * 1000) + 1000));
+}
+
+function initParticles(nodes) {
+  nodeItems = nodes;
+  addParticles();
 }
 
 function init() {
@@ -38,7 +45,8 @@ function init() {
   myWorker.settings.color = new THREE.Color();
 
   myWorker.settings.scene = new THREE.Scene();
-  myWorker.settings.scene.fog = new THREE.Fog( 0x050505, 2000, 3500 );
+  myWorker.settings.scene.fog = new THREE.Fog( 0x050505, 3500, 3500 );
+  myWorker.settings.sprite = THREE.ImageUtils.loadTexture( "/assets/textures/ball.png" );
 
   myWorker.settings.renderer = new THREE.WebGLRenderer( { antialias: false } );
   myWorker.settings.renderer.setClearColor( myWorker.settings.scene.fog.color );
@@ -47,6 +55,7 @@ function init() {
   myWorker.settings.container.appendChild( myWorker.settings.renderer.domElement );
 
   myWorker.settings.camera = new THREE.PerspectiveCamera( 27, window.innerWidth / window.innerHeight, 5, 3500 );
+
   myWorker.settings.camera.position.z = 2750;
   myWorker.settings.camera.target = new THREE.Vector3();
 
@@ -59,7 +68,7 @@ function init() {
   myWorker.settings.geometry.addAttribute( 'color', new THREE.BufferAttribute(myWorker.settings.colors, 3 ));
   myWorker.settings.geometry.computeBoundingSphere();
 
-  var material = new THREE.PointCloudMaterial( { size: 15, vertexColors: THREE.VertexColors } );
+  var material = new THREE.PointCloudMaterial( { size: 45, map: myWorker.settings.sprite, vertexColors: THREE.VertexColors, alphaTest: 0.5, transparent: true } );
   myWorker.settings.particleSystem = new THREE.PointCloud( myWorker.settings.geometry, material );
   myWorker.settings.scene.add( myWorker.settings.particleSystem );
 
@@ -154,14 +163,16 @@ function animate() {
 
 function render() {
 
-  var time = Date.now() * 0.001;
-
-  myWorker.settings.particleSystem.rotation.x = time * 0.25;
-  myWorker.settings.particleSystem.rotation.y = time * 0.5;
+   var time = Date.now() * 0.001;
+  //
+  // myWorker.settings.particleSystem.rotation.x = time * 0.25;
+   myWorker.settings.particleSystem.rotation.y = time * 0.5;
 
   myWorker.settings.renderer.render( myWorker.settings.scene, myWorker.settings.camera );
 
 }
+
+var messageCount = 0;
 
 function mainInit() {
 
@@ -169,6 +180,13 @@ function mainInit() {
   animate();
 
   myWorker.eventMessage = new Worker("worker.js");
+
+  // Get JSON data
+  $.getJSON( "/data.json", function( data ) {
+    var items = data.nodes;
+
+    initParticles(items);
+  });
 
   myWorker.eventMessage.onmessage = function(e) {
     for(var i = 0; i < e.data.length; i++) {
@@ -178,9 +196,12 @@ function mainInit() {
     myWorker.settings.particleSystem.geometry.attributes.position.needsUpdate = true;
     myWorker.settings.particleSystem.geometry.attributes.color.needsUpdate = true;
     myWorker.settings.stats.update();
+    messageCount++;
+    if(messageCount < 25)
+      addParticles();
   }
 
-  initParticles();
+
 
 }
 
