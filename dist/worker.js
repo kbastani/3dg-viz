@@ -9,7 +9,7 @@ onmessage = function(e) {
       for(var j = 0; j < e.data.length; j++) {
         var x = (parseInt(e.data[j].x) / 10) - 500;
         var y = (parseInt(e.data[j].y) / 10) - 500;
-        var z = 0;
+        var z = Math.min((parseInt(e.data[j].z) / 10) - 500, 2000);
 
         particleBuffer.push([x, y, z]);
       }
