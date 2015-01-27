@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+- '0.11'
+- '0.10'
+deploy:
+  provider: heroku
+  api_key:
+    secure: DUBY5zl5McCWlypqyYRGxQkO/lJ8cky1bwROPCPu1kDCZaNxubMN52vWQMew6B3bINcG4LnTFWEM2iyF/xi04QXV6iXLIPYJLiuFqEyrmaN3nEt6lTTda78Lc0BW+DVOcz06IBmmFQvCi6U+eK0C48toI31zu5GzzE/Z1QijR6I=
+  app: 3dg-viz
+  on:
+    repo: kbastani/3dg-viz
