@@ -163,10 +163,10 @@ function animate() {
 
 function render() {
 
-   var time = Date.now() * 0.001;
+  // var time = Date.now() * 0.001;
   //
   // myWorker.settings.particleSystem.rotation.x = time * 0.25;
-   myWorker.settings.particleSystem.rotation.y = time * 0.5;
+  // myWorker.settings.particleSystem.rotation.y = time * 0.5;
 
   myWorker.settings.renderer.render( myWorker.settings.scene, myWorker.settings.camera );
 
