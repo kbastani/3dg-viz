@@ -45,7 +45,7 @@ function init() {
   myWorker.settings.color = new THREE.Color();
 
   myWorker.settings.scene = new THREE.Scene();
-  myWorker.settings.scene.fog = new THREE.Fog( 0x050505, 3500, 3500 );
+  myWorker.settings.scene.fog = new THREE.Fog( 0x050505, 13000, 15000 );
   myWorker.settings.sprite = THREE.ImageUtils.loadTexture( "/assets/textures/ball.png" );
 
   myWorker.settings.renderer = new THREE.WebGLRenderer( { antialias: false } );
@@ -54,14 +54,14 @@ function init() {
   myWorker.settings.renderer.setSize( window.innerWidth, window.innerHeight );
   myWorker.settings.container.appendChild( myWorker.settings.renderer.domElement );
 
-  myWorker.settings.camera = new THREE.PerspectiveCamera( 27, window.innerWidth / window.innerHeight, 5, 3500 );
+  myWorker.settings.camera = new THREE.PerspectiveCamera( 27, window.innerWidth / window.innerHeight, 5, 15000 );
 
   myWorker.settings.camera.position.z = 2750;
   myWorker.settings.camera.target = new THREE.Vector3();
 
   myWorker.settings.controls = new THREE.OrbitControls( myWorker.settings.camera, myWorker.settings.renderer.domElement );
   myWorker.settings.controls.minDistance = 0;
-  myWorker.settings.controls.maxDistance = 5000;
+  myWorker.settings.controls.maxDistance = 15000;
 
 
   myWorker.settings.geometry.addAttribute( 'position', new THREE.BufferAttribute( myWorker.settings.positions, 3));
@@ -123,9 +123,9 @@ function addParticle(e) {
 
   // colors
 
-  var vx = ( x / myWorker.settings.n ) + 0.5;
-  var vy = ( y / myWorker.settings.n ) + 0.5;
-  var vz = ( z / myWorker.settings.n ) + 0.5;
+  var vx = ( x / myWorker.settings.n ) + 0.85;
+  var vy = ( y / myWorker.settings.n ) + 0.85;
+  var vz = ( z / myWorker.settings.n ) + 0.85;
 
   myWorker.settings.color.setRGB( vx, vy, vz );
 
