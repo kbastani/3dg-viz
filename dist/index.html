@@ -33,13 +33,41 @@
   <script src="./assets/js/OrbitControls.js"></script>
   <script src="./assets/js/Detector.js"></script>
   <script src="./assets/js/stats.min.js"></script>
+  <script src="//cdn.jsdelivr.net/jstat/1.1.2/jstat.min.js"></script>
 </head>
 <body>
 
   <div id="container"></div>
   <div id="info">Distributed Graph Visualization Prototype</div>
 
-
+  <!-- Custom shaders for particle effects -->
+  <script type="x-shader/x-vertex" id="vertexshader">
+  attribute vec3 customColor;
+  attribute float customSize;
+  varying vec3 vColor;
+  void main()
+  {
+  vColor = customColor; // set color associated to vertex; use later in fragment shader
+  vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+  // option (1): draw particles at constant size on screen
+  // gl_PointSize = size;
+  // option (2): scale particles as objects in 3D space
+  gl_PointSize = customSize * ( 300.0 / length( mvPosition.xyz ) );
+  gl_Position = projectionMatrix * mvPosition;
+  }
+  </script>
+  <script type="x-shader/x-fragment" id="fragmentshader">
+  uniform sampler2D texture;
+  varying vec3 vColor; // colors associated to vertices; assigned by vertex shader
+  void main()
+  {
+  // calculates a color for the particle
+  gl_FragColor = vec4( vColor, 1.0 );
+  // sets particle texture to desired color
+  gl_FragColor = gl_FragColor * texture2D( texture, gl_PointCoord );
+  }
+  </script>
+  <!-- end of custom shaders -->
   <script src="./assets/js/main.js"></script>
 
 </body>
