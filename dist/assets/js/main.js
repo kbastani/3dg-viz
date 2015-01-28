@@ -17,10 +17,10 @@ myWorker.settings = {
   cloud_count:50000,
   particles:0,
   lineParticles:0,
-  positions:new Float32Array(500000 * 3),
-  colors:new Float32Array(500000 * 3),
-  positionsLine:new Float32Array(5000000 * 3),
-  colorsLine:new Float32Array(5000000 * 3),
+  positions:new Float32Array(50000 * 3),
+  colors:new Float32Array(50000 * 3),
+  positionsLine:new Float32Array(500000 * 3),
+  colorsLine:new Float32Array(500000 * 3),
   controls:undefined,
   mouse:undefined,
   mouseHelper:undefined,
@@ -76,7 +76,7 @@ function init() {
   myWorker.settings.geometry.addAttribute( 'color', new THREE.BufferAttribute(myWorker.settings.colors, 3 ));
   myWorker.settings.geometry.computeBoundingSphere();
 
-  var material = new THREE.PointCloudMaterial( { size: 100, map: myWorker.settings.sprite, vertexColors: THREE.VertexColors, alphaTest: .5, transparent: true } );
+  var material = new THREE.PointCloudMaterial( { size: 200, map: myWorker.settings.sprite, vertexColors: THREE.VertexColors, alphaTest: .5, transparent: true } );
   myWorker.settings.particleSystem = new THREE.PointCloud( myWorker.settings.geometry, material );
   myWorker.settings.scene.add( myWorker.settings.particleSystem );
 
@@ -169,11 +169,11 @@ function addEdge(e) {
 
   var x1 = (parseInt(e.from.x) / 2) - 500;
   var y1 = (parseInt(e.from.y) / 2) - 500;
-  var z1 = Math.min((parseInt(e.from.z) / 4) - 500, 5000);
+  var z1 = Math.min((parseInt(e.from.z) / 12) - 500, 1000);
 
   var x2 = (parseInt(e.to.x) / 2) - 500;
   var y2 = (parseInt(e.to.y) / 2) - 500;
-  var z2 = Math.min((parseInt(e.to.z) / 4) - 500, 2000);
+  var z2 = Math.min((parseInt(e.to.z) / 12) - 500, 1000);
 
   //getMidPoint();
   // var linePoints = subtractVector({x: x1, y: y1, z: z1}, {x: x2, y: y2, z: z2}); //
