@@ -19,8 +19,8 @@ myWorker.settings = {
   lineParticles:0,
   positions:new Float32Array(50000 * 3),
   colors:new Float32Array(50000 * 3),
-  positionsLine:new Float32Array(500000 * 3),
-  colorsLine:new Float32Array(500000 * 3),
+  positionsLine:new Float32Array(5000000 * 3),
+  colorsLine:new Float32Array(5000000 * 3),
   controls:undefined,
   mouse:undefined,
   mouseHelper:undefined,
@@ -86,7 +86,7 @@ function init() {
   myWorker.settings.geometryLine.addAttribute( 'color', new THREE.BufferAttribute(myWorker.settings.colorsLine, 3 ));
   myWorker.settings.geometryLine.computeBoundingSphere();
 
-  var materialLine = new THREE.PointCloudMaterial( { size: 10, vertexColors: THREE.VertexColors } );
+  var materialLine = new THREE.PointCloudMaterial( { size: .5, vertexColors: THREE.VertexColors } );
   myWorker.settings.particleSystemLine = new THREE.PointCloud( myWorker.settings.geometryLine, materialLine );
   myWorker.settings.scene.add( myWorker.settings.particleSystemLine );
 
@@ -177,7 +177,7 @@ function addEdge(e) {
 
   //getMidPoint();
   // var linePoints = subtractVector({x: x1, y: y1, z: z1}, {x: x2, y: y2, z: z2}); //
-  var linePoints = getIntermediatePoints([x1, y1, z1], [x2, y2, z2], 5);
+  var linePoints = getIntermediatePoints([x1, y1, z1], [x2, y2, z2], 8);
   for(var i = 0; i < linePoints.length; i++) {
     // if(!(isNaN(linePoints[i][0]) || isNaN(linePoints[i][1]) || isNaN(linePoints[i][2])))
       addParticleLine({ data: linePoints[i] });
