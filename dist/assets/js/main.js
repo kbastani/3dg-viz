@@ -19,14 +19,14 @@ myWorker.settings = {
   lineParticles:0,
   positions:new Float32Array(50000 * 3),
   colors:new Float32Array(50000 * 3),
-  positionsLine:new Float32Array(5000000 * 3),
-  colorsLine:new Float32Array(5000000 * 3),
+  positionsLine:new Float32Array(800000 * 3),
+  colorsLine:new Float32Array(900000 * 3),
   controls:undefined,
   mouse:undefined,
   mouseHelper:undefined,
   color:undefined,
   colorLine:undefined,
-  n: 1000,
+  n: 500,
   n2: 500
 }
 
@@ -63,7 +63,7 @@ function init() {
 
   myWorker.settings.camera = new THREE.PerspectiveCamera( 27, window.innerWidth / window.innerHeight, 5, 100000 );
 
-  myWorker.settings.camera.position.z = 10000;
+  myWorker.settings.camera.position.z = 15000;
 
   myWorker.settings.camera.target = new THREE.Vector3();
 
@@ -76,7 +76,7 @@ function init() {
   myWorker.settings.geometry.addAttribute( 'color', new THREE.BufferAttribute(myWorker.settings.colors, 3 ));
   myWorker.settings.geometry.computeBoundingSphere();
 
-  var material = new THREE.PointCloudMaterial( { size: 200, map: myWorker.settings.sprite, vertexColors: THREE.VertexColors, alphaTest: .5, transparent: true } );
+  var material = new THREE.PointCloudMaterial( { size: 250, map: myWorker.settings.sprite, vertexColors: THREE.VertexColors, alphaTest: .8, transparent: true } );
   myWorker.settings.particleSystem = new THREE.PointCloud( myWorker.settings.geometry, material );
   myWorker.settings.scene.add( myWorker.settings.particleSystem );
 
@@ -86,7 +86,7 @@ function init() {
   myWorker.settings.geometryLine.addAttribute( 'color', new THREE.BufferAttribute(myWorker.settings.colorsLine, 3 ));
   myWorker.settings.geometryLine.computeBoundingSphere();
 
-  var materialLine = new THREE.PointCloudMaterial( { size: .5, vertexColors: THREE.VertexColors } );
+  var materialLine = new THREE.PointCloudMaterial( { size: 10, map: myWorker.settings.sprite, vertexColors: THREE.VertexColors, alphaTest: .5, transparent: true } );
   myWorker.settings.particleSystemLine = new THREE.PointCloud( myWorker.settings.geometryLine, materialLine );
   myWorker.settings.scene.add( myWorker.settings.particleSystemLine );
 
@@ -169,15 +169,15 @@ function addEdge(e) {
 
   var x1 = (parseInt(e.from.x) / 2) - 500;
   var y1 = (parseInt(e.from.y) / 2) - 500;
-  var z1 = Math.min((parseInt(e.from.z) / 12) - 500, 1000);
+  var z1 = Math.min((parseInt(e.from.z) / 2) - 500, 3000);
 
   var x2 = (parseInt(e.to.x) / 2) - 500;
   var y2 = (parseInt(e.to.y) / 2) - 500;
-  var z2 = Math.min((parseInt(e.to.z) / 12) - 500, 1000);
+  var z2 = Math.min((parseInt(e.to.z) / 2) - 500, 3000);
 
   //getMidPoint();
   // var linePoints = subtractVector({x: x1, y: y1, z: z1}, {x: x2, y: y2, z: z2}); //
-  var linePoints = getIntermediatePoints([x1, y1, z1], [x2, y2, z2], 8);
+  var linePoints = getIntermediatePoints([x1, y1, z1], [x2, y2, z2], 6);
   for(var i = 0; i < linePoints.length; i++) {
     // if(!(isNaN(linePoints[i][0]) || isNaN(linePoints[i][1]) || isNaN(linePoints[i][2])))
       addParticleLine({ data: linePoints[i] });
@@ -223,9 +223,9 @@ function addParticleLine(e) {
 
   // colors
 
-  var vx = .8;
-  var vy = .8;
-  var vz = .8;
+  var vx = 20;
+  var vy = 20;
+  var vz = 20;
 
 
 
@@ -254,9 +254,9 @@ function addParticle(e) {
 
   // colors
 
-  var vx = ( x / myWorker.settings.n ) + 0.85;
-  var vy = ( y / myWorker.settings.n ) + 0.85;
-  var vz = ( z / myWorker.settings.n ) + 0.85;
+  var vx = ( x / myWorker.settings.n ) + 0.1;
+  var vy = ( z /  myWorker.settings.n) + 0.1;
+  var vz = ( y / myWorker.settings.n ) + 0.1;
 
 
 
