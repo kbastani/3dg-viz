@@ -76,7 +76,7 @@ function init() {
   myWorker.settings.geometry.addAttribute( 'color', new THREE.BufferAttribute(myWorker.settings.colors, 3 ));
   myWorker.settings.geometry.computeBoundingSphere();
 
-  var material = new THREE.PointCloudMaterial( { size: 250, map: myWorker.settings.sprite, vertexColors: THREE.VertexColors, alphaTest: .8, transparent: true } );
+  var material = new THREE.PointCloudMaterial( { size: 250, map: myWorker.settings.sprite, vertexColors: THREE.VertexColors, alphaTest: .25, transparent: true } );
   myWorker.settings.particleSystem = new THREE.PointCloud( myWorker.settings.geometry, material );
   myWorker.settings.scene.add( myWorker.settings.particleSystem );
 
@@ -86,7 +86,7 @@ function init() {
   myWorker.settings.geometryLine.addAttribute( 'color', new THREE.BufferAttribute(myWorker.settings.colorsLine, 3 ));
   myWorker.settings.geometryLine.computeBoundingSphere();
 
-  var materialLine = new THREE.PointCloudMaterial( { size: 10, map: myWorker.settings.sprite, vertexColors: THREE.VertexColors, alphaTest: .5, transparent: true } );
+  var materialLine = new THREE.PointCloudMaterial( { size: 10, vertexColors: THREE.VertexColors, alphaTest: .15, transparent: true } );
   myWorker.settings.particleSystemLine = new THREE.PointCloud( myWorker.settings.geometryLine, materialLine );
   myWorker.settings.scene.add( myWorker.settings.particleSystemLine );
 
@@ -169,15 +169,15 @@ function addEdge(e) {
 
   var x1 = (parseInt(e.from.x) / 2) - 500;
   var y1 = (parseInt(e.from.y) / 2) - 500;
-  var z1 = Math.min((parseInt(e.from.z) / 2) - 500, 3000);
+  var z1 = Math.min((parseInt(e.from.z) / 4) - 500, 5000);
 
   var x2 = (parseInt(e.to.x) / 2) - 500;
   var y2 = (parseInt(e.to.y) / 2) - 500;
-  var z2 = Math.min((parseInt(e.to.z) / 2) - 500, 3000);
+  var z2 = Math.min((parseInt(e.to.z) / 4) - 500, 5000);
 
   //getMidPoint();
   // var linePoints = subtractVector({x: x1, y: y1, z: z1}, {x: x2, y: y2, z: z2}); //
-  var linePoints = getIntermediatePoints([x1, y1, z1], [x2, y2, z2], 6);
+  var linePoints = getIntermediatePoints([x1, y1, z1], [x2, y2, z2], 5);
   for(var i = 0; i < linePoints.length; i++) {
     // if(!(isNaN(linePoints[i][0]) || isNaN(linePoints[i][1]) || isNaN(linePoints[i][2])))
       addParticleLine({ data: linePoints[i] });
@@ -223,9 +223,9 @@ function addParticleLine(e) {
 
   // colors
 
-  var vx = 20;
-  var vy = 20;
-  var vz = 20;
+  var vx = 1;
+  var vy = 1;
+  var vz = 2;
 
 
 
@@ -255,8 +255,8 @@ function addParticle(e) {
   // colors
 
   var vx = ( x / myWorker.settings.n ) + 0.1;
-  var vy = ( z /  myWorker.settings.n) + 0.1;
-  var vz = ( y / myWorker.settings.n ) + 0.1;
+  var vy = ( y /  myWorker.settings.n) + 0.1;
+  var vz = ( z / myWorker.settings.n ) + 0.1;
 
 
 
