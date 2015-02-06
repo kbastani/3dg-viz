@@ -109,10 +109,12 @@ function init() {
   myWorker.settings.mouseHelper.visible = false;
   myWorker.settings.scene.add( myWorker.settings.mouseHelper );
 
+  var uiPanel = document.getElementById( 'stats-container' );
   myWorker.settings.stats = new Stats();
   myWorker.settings.stats.domElement.style.position = 'absolute';
-  myWorker.settings.stats.domElement.style.top = '0px';
-  myWorker.settings.container.appendChild( myWorker.settings.stats.domElement );
+  myWorker.settings.stats.domElement.style.top = '0';
+  myWorker.settings.stats.domElement.style.left = '80';
+  uiPanel.appendChild( myWorker.settings.stats.domElement );
   window.addEventListener( 'resize', onWindowResize, false );var moved = false;
 
   myWorker.settings.controls.addEventListener( 'change', function() {
@@ -340,15 +342,18 @@ function getMidPointForVector(p1, p2) {
   return p3;
 }
 
+var rotateTime = 711597378.477;
+
 function render() {
 
   var time = Date.now() * 0.001;
 
-  //myWorker.settings.particleSystem.rotation.y = time * 0.25;
-  // myWorker.settings.particleSystem.rotation.y = time * 0.5;
-  // myWorker.settings.linesMesh.rotation.y = time * 0.25;
-  // myWorker.settings.linesMesh.rotation.y = time * 0.5;
-
+  if(rotateGraph) {
+    myWorker.settings.particleSystem.rotation.y = myWorker.settings.particleSystem.rotation.y + .005;
+    myWorker.settings.particleSystemLine.rotation.y =  myWorker.settings.particleSystemLine.rotation.y + .005;
+    myWorker.settings.particleSystem.geometry.attributes.position.needsUpdate = true;
+    myWorker.settings.particleSystemLine.geometry.attributes.position.needsUpdate = true;
+  }
   myWorker.settings.renderer.render( myWorker.settings.scene, myWorker.settings.camera );
 
 }
@@ -358,7 +363,52 @@ var messageCount = 0;
 var nodeMap = {};
 var edgeList = [];
 
+var rotateGraph = false;
+
 function mainInit() {
+
+  var uiHidden = false;
+
+  // Wire up UI
+  $( ".collapse-ui-btn" ).click(function() { if(uiHidden) {
+
+    $(".collapse-ui-btn .glyphicon").removeClass("glyphicon glyphicon-arrow-right").addClass("glyphicon glyphicon-arrow-left");
+    $(".panel").show();
+    $( "#ui-overlay" ).animate({
+      left: "+=200"
+    }, 200, function() {
+      // Animation complete.
+
+      uiHidden = false;
+    });
+  } else {
+
+    $(".collapse-ui-btn .glyphicon").removeClass("glyphicon glyphicon-arrow-left").addClass("glyphicon glyphicon-arrow-right");
+    $(".panel").hide();
+    $( "#ui-overlay" ).animate({
+      left: "-=200"
+    }, 200, function() {
+      // Animation complete.
+
+      uiHidden = true;
+    });
+
+
+  }
+  });
+
+  $("#rotate").click(function() {
+      if(rotateGraph) {
+        rotateGraph = false;
+        $(".rotate-status").text("Off");
+      } else {
+        rotateGraph = true;
+        $(".rotate-status").text("On");
+      }
+  });
+
+  $("#rotate").click();
+  $(".collapse-ui-btn").click();
 
   init();
   animate();
