@@ -4,6 +4,27 @@ var myWorker = {};
 
 myWorker.eventMessage = {};
 
+/*
+  Data storage:
+  Each node has a force vector, direction3 and magnitude float[4]
+  Force vector is a unit vector for idx 1,2,3 and float number for 4
+  Each node has a pointer integer to its coordinate position
+
+
+  [
+    {
+      id: 1,
+      position: 30,
+      direction: [.1, .1, .1],
+      magnitude: 1.5
+    }
+  ]
+
+  Loop through each node
+  Collect the force vectors of connected nodes
+
+*/
+
 myWorker.settings = {
   container: undefined,
   stats: undefined,
@@ -39,8 +60,8 @@ function addParticles() {
 function initParticles(nodes) {
   nodeItems = nodes;
   addParticles();
-  myWorker.settings.camera.position.x = 1800;
-  myWorker.settings.camera.position.y = 1800;
+  myWorker.settings.camera.position.x = 0;
+  myWorker.settings.camera.position.y = 0;
 }
 
 function init() {
@@ -63,7 +84,7 @@ function init() {
 
   myWorker.settings.camera = new THREE.PerspectiveCamera( 27, window.innerWidth / window.innerHeight, 5, 100000 );
 
-  myWorker.settings.camera.position.z = 15000;
+  myWorker.settings.camera.position.z = 10000;
 
   myWorker.settings.camera.target = new THREE.Vector3();
 
@@ -85,9 +106,9 @@ function init() {
   myWorker.settings.geometryLine.addAttribute( 'position', new THREE.BufferAttribute( myWorker.settings.positionsLine, 3));
   myWorker.settings.geometryLine.addAttribute( 'color', new THREE.BufferAttribute(myWorker.settings.colorsLine, 3 ));
   myWorker.settings.geometryLine.computeBoundingSphere();
-
-  var materialLine = new THREE.PointCloudMaterial( { size: 10, vertexColors: THREE.VertexColors, alphaTest: .15, transparent: true } );
-  myWorker.settings.particleSystemLine = new THREE.PointCloud( myWorker.settings.geometryLine, materialLine );
+  var materialLine2 = new THREE.LineBasicMaterial({ linewidth: 4, vertexColors: THREE.VertexColors, size: 10 });
+  //var materialLine = new THREE.PointCloudMaterial( { size: 10, vertexColors: THREE.VertexColors, alphaTest: .15, transparent: true } );
+  myWorker.settings.particleSystemLine = new THREE.PointCloud( myWorker.settings.geometryLine, materialLine2 );
   myWorker.settings.scene.add( myWorker.settings.particleSystemLine );
 
   // myWorker.settings.lines = new THREE.BufferGeometry();
@@ -167,21 +188,21 @@ function normalize(v1, vR) {
 // Add edge, from and to
 function addEdge(e) {
 
-  var x1 = (parseInt(e.from.x) / 2) - 500;
-  var y1 = (parseInt(e.from.y) / 2) - 500;
-  var z1 = Math.min((parseInt(e.from.z) / 4) - 500, 5000);
-
-  var x2 = (parseInt(e.to.x) / 2) - 500;
-  var y2 = (parseInt(e.to.y) / 2) - 500;
-  var z2 = Math.min((parseInt(e.to.z) / 4) - 500, 5000);
+  // var x1 = (parseInt(e.from.x) / 2) - 500;
+  // var y1 = (parseInt(e.from.y) / 2) - 500;
+  // var z1 = Math.min((parseInt(e.from.z) / 4) - 500, 5000);
+  //
+  // var x2 = (parseInt(e.to.x) / 2) - 500;
+  // var y2 = (parseInt(e.to.y) / 2) - 500;
+  // var z2 = Math.min((parseInt(e.to.z) / 4) - 500, 5000);
 
   //getMidPoint();
   // var linePoints = subtractVector({x: x1, y: y1, z: z1}, {x: x2, y: y2, z: z2}); //
-  var linePoints = getIntermediatePoints([x1, y1, z1], [x2, y2, z2], 5);
-  for(var i = 0; i < linePoints.length; i++) {
-    // if(!(isNaN(linePoints[i][0]) || isNaN(linePoints[i][1]) || isNaN(linePoints[i][2])))
-      addParticleLine({ data: linePoints[i] });
-  }
+  // var linePoints = getIntermediatePoints([x1, y1, z1], [x2, y2, z2], 5);
+  // for(var i = 0; i < linePoints.length; i++) {
+  //   // if(!(isNaN(linePoints[i][0]) || isNaN(linePoints[i][1]) || isNaN(linePoints[i][2])))
+  //     addParticleLine({ data: linePoints[i], id: e.id * 3 });
+  // }
 
 
   // var lvx1 = .3;
@@ -214,49 +235,59 @@ var angle = jStat.angle(p1, p2);
 return jStat.multiply([Math.cos(angle), Math.sin(angle), 0], n);
 }
 
-function addParticleLine(e) {
-  // positions
-
-  var x = e.data[0];
-  var y = e.data[1];
-  var z = e.data[2];
-
-  // colors
-
-  var vx = 1;
-  var vy = 1;
-  var vz = 2;
-
-
-
-  myWorker.settings.colorLine.setRGB( vx, vy, vz );
-
-
-  myWorker.settings.positionsLine[myWorker.settings.lineParticles] = x;
-  myWorker.settings.positionsLine[myWorker.settings.lineParticles + 1] = y;
-  myWorker.settings.positionsLine[myWorker.settings.lineParticles + 2] = z;
-
-  myWorker.settings.colorsLine[myWorker.settings.lineParticles] = myWorker.settings.colorLine.r;
-  myWorker.settings.colorsLine[myWorker.settings.lineParticles + 1] = myWorker.settings.colorLine.g;
-  myWorker.settings.colorsLine[myWorker.settings.lineParticles + 2] = myWorker.settings.colorLine.b;
-
-
-
-  myWorker.settings.lineParticles += 3;
-}
+// function addParticleLine(e) {
+//   // positions
+//
+//   var x = e.data[0];
+//   var y = e.data[1];
+//   var z = e.data[2];
+//
+//   // colors
+//
+//   var vx = 1;
+//   var vy = 1;
+//   var vz = 2;
+//
+//
+//
+//   myWorker.settings.colorLine.setRGB( vx, vy, vz );
+//
+//
+//   // myWorker.settings.positionsLine[myWorker.settings.lineParticles] = x;
+//   // myWorker.settings.positionsLine[myWorker.settings.lineParticles + 1] = y;
+//   // myWorker.settings.positionsLine[myWorker.settings.lineParticles + 2] = z;
+//   //
+//   // myWorker.settings.colorsLine[myWorker.settings.lineParticles] = myWorker.settings.colorLine.r;
+//   // myWorker.settings.colorsLine[myWorker.settings.lineParticles + 1] = myWorker.settings.colorLine.g;
+//   // myWorker.settings.colorsLine[myWorker.settings.lineParticles + 2] = myWorker.settings.colorLine.b;
+//
+//   myWorker.settings.positionsLine[e.id] = x;
+//   myWorker.settings.positionsLine[e.id + 1] = y;
+//   myWorker.settings.positionsLine[e.id + 2] = z;
+//
+//   myWorker.settings.colorsLine[myWorker.settings.lineParticles] = myWorker.settings.colorLine.r;
+//   myWorker.settings.colorsLine[myWorker.settings.lineParticles + 1] = myWorker.settings.colorLine.g;
+//   myWorker.settings.colorsLine[myWorker.settings.lineParticles + 2] = myWorker.settings.colorLine.b;
+//
+//
+//   myWorker.settings.lineParticles += 3;
+// }
 
 function addParticle(e) {
   // positions
 
-  var x = e.data[0];
-  var y = e.data[1];
-  var z = e.data[2];
+  var x = e.data.pos[0];
+  var y = e.data.pos[1];
+  var z = e.data.pos[2];
+
+  // Set the pointer
+  nodeMap[e.data.ref.id].position = myWorker.settings.particles;
 
   // colors
 
-  var vx = ( x / myWorker.settings.n ) + 0.1;
-  var vy = ( y /  myWorker.settings.n) + 0.1;
-  var vz = ( z / myWorker.settings.n ) + 0.1;
+  var vx = ( x / myWorker.settings.n ) + .5;
+  var vy = ( y /  myWorker.settings.n) + .5;
+  var vz = ( z / myWorker.settings.n ) + .5;
 
 
 
@@ -340,10 +371,72 @@ function getMidPointForVector(p1, p2) {
   return p3;
 }
 
+var vectorPush = [.9,.9,.9];
+
 function render() {
 
   var time = Date.now() * 0.001;
 
+  // Loop through nodeMap
+  var keySet = Object.keys(nodeMap);
+
+  for(var i = 0; i < keySet.length; i++) {
+    var k = nodeMap[keySet[i]];
+
+    // Get the connected nodes forceVec
+    var adjNodes = {};
+
+    k.edges.forEach(function(item, i) { adjNodes[item] = i; });
+
+    var mapUnique = {};
+
+    var forceMatrix = [];
+
+    for(var j = 0; j < Object.keys(adjNodes).length; j++) {
+      if(!mapUnique[Object.keys(adjNodes)[j]]) {
+        forceMatrix.push(nodeMap[ Object.keys(adjNodes)[j]]);
+        mapUnique[Object.keys(adjNodes)[j]] = 0;
+      }
+    }
+
+    if(forceMatrix.length > 0) {
+      // Construct force vector by summing them together
+      var baseVector = new Vector([0, 0, 0]);
+
+      for(var j = 0; j < forceMatrix.length; j++) {
+        if(forceMatrix[j]) 
+          baseVector = baseVector.add(new Vector(forceMatrix[j].direction));
+      }
+
+      nodeMap[keySet[i]].direction = baseVector.unit().toArray();
+
+      var forceVec = jStat.multiply(nodeMap[keySet[i]].direction, k.magnitude * 5);
+      myWorker.settings.positions[k.position] = myWorker.settings.positions[k.position] + forceVec[0];
+      myWorker.settings.positions[k.position + 1] = myWorker.settings.positions[k.position + 1] + forceVec[1];
+      myWorker.settings.positions[k.position + 2] = myWorker.settings.positions[k.position + 2] + forceVec[2];
+    }
+  }
+  myWorker.settings.particleSystem.geometry.attributes.position.needsUpdate = true;
+
+  // Update edges
+  for(var i = 0; i < edgeList.length; i++) {
+    var k1 = nodeMap[edgeList[i].points.from.id];
+    var k2 = nodeMap[edgeList[i].points.to.id];
+    var x1 = myWorker.settings.positions[k1.position];
+    var y1 = myWorker.settings.positions[k1.position + 1];
+    var z1 = myWorker.settings.positions[k1.position + 2];
+    var x2 = myWorker.settings.positions[k2.position];
+    var y2 = myWorker.settings.positions[k2.position + 1];
+    var z2 = myWorker.settings.positions[k2.position + 2];
+
+    edgeList[i].line.geometry.vertices[0].x = x1;
+    edgeList[i].line.geometry.vertices[0].y = y1;
+    edgeList[i].line.geometry.vertices[0].z = z1;
+    edgeList[i].line.geometry.vertices[1].x = x2;
+    edgeList[i].line.geometry.vertices[1].y = y2;
+    edgeList[i].line.geometry.vertices[1].z = z2;
+    edgeList[i].line.geometry.verticesNeedUpdate = true;
+  }
   //myWorker.settings.particleSystem.rotation.y = time * 0.25;
   // myWorker.settings.particleSystem.rotation.y = time * 0.5;
   // myWorker.settings.linesMesh.rotation.y = time * 0.25;
@@ -366,18 +459,50 @@ function mainInit() {
   myWorker.eventMessage = new Worker("worker.js");
 
   // Get JSON data
-  $.getJSON( "/data.json", function( data ) {
-    var items = data.nodes;
+  $.getJSON( "/assets/data2.json", function( data ) {
+    var items = [];
+
+    for(var i = 0; i < data.nodes.length; i++) {
+      if(data.nodes[i].edges.length > 0) {
+        items.push(data.nodes[i]);
+      }
+    }
 
     for(var i = 0; i < items.length; i++) {
+      items[i].direction = [(Math.random() * 2.0) - 1.0, (Math.random() * 2.0) - 1.0, (Math.random() * 2.0) - 1.0];
+      items[i].magnitude = (Math.random() * 1.0);
       nodeMap[items[i].id] = items[i];
     }
 
+    var counter = 0;
     for(var i = 0; i < items.length; i++) {
       for(var j = 0; j < items[i].edges.length; j++) {
-        edgeList.push({from: items[i], to: nodeMap[items[i].edges[j]]})
+        var geometryX = new THREE.Geometry();
+
+        var e = {from: items[i], to: nodeMap[items[i].edges[j]]};
+
+        if(e.to != undefined && e.from != undefined) {
+
+        var x1 = (parseInt(e.from.x) / 2) - 500;
+        var y1 = (parseInt(e.from.y) / 2) - 500;
+        var z1 = Math.min((parseInt(e.from.z) / 4) - 500, 5000);
+
+        var x2 = (parseInt(e.to.x) / 2) - 500;
+        var y2 = (parseInt(e.to.y) / 2) - 500;
+        var z2 = Math.min((parseInt(e.to.z) / 4) - 500, 5000);
+
+        geometryX.vertices.push(new THREE.Vector3(x1, y1, z1));
+        geometryX.vertices.push(new THREE.Vector3(x2, y2, z2));
+        var materialX = new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: .5 } );
+        var line = new THREE.Line(geometryX, materialX);
+        myWorker.settings.scene.add(line);
+        edgeList.push({id: counter, line: line, points: e })
+        counter++;
+      }
       }
     }
+
+
 
     for(var i = 0; i < edgeList.length; i++) {
       addEdge(edgeList[i]);
@@ -394,12 +519,12 @@ function mainInit() {
     myWorker.settings.geometry.computeBoundingSphere();
     myWorker.settings.particleSystem.geometry.attributes.position.needsUpdate = true;
     myWorker.settings.particleSystem.geometry.attributes.color.needsUpdate = true;
-    myWorker.settings.particleSystemLine.geometry.computeBoundingSphere();
-    myWorker.settings.particleSystemLine.geometry.attributes.position.needsUpdate = true;
-    myWorker.settings.particleSystemLine.geometry.attributes.color.needsUpdate = true;
+    // myWorker.settings.particleSystemLine.geometry.computeBoundingSphere();
+    // myWorker.settings.particleSystemLine.geometry.attributes.position.needsUpdate = true;
+    // myWorker.settings.particleSystemLine.geometry.attributes.color.needsUpdate = true;
     myWorker.settings.stats.update();
     messageCount++;
-    if(messageCount < 25)
+    if(messageCount < 2)
       addParticles();
   }
 
