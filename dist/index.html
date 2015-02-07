@@ -30,7 +30,7 @@
   <link href="./assets/css/jasny-bootstrap.min.css" rel="stylesheet"/>
 </head>
 <body>
-  <div id="load-overlay"></div>
+  <div id="load-overlay"><div class="center">Loading...</div></div>
   <div id="ui-overlay"><div class="row">
     <div class="col-md-12"><span id="stats-container" style="float:left;"></span> <button type="button" style="float:right;" class="collapse-ui-btn btn btn-default btn-lg">
   <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
@@ -167,7 +167,7 @@
   }
   function load(e) {
     onRender = true;
-    GraphMLViewer.Loader(xmlDoc)
+    GraphMLViewer.Loader(xmlDoc || e.data)
     $("#load-overlay").hide();
   }
   document.getElementById('files').addEventListener('change', handleFileSelect, false);

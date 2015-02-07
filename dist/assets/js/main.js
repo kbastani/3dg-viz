@@ -418,6 +418,8 @@ function mainInit() {
     $("#rotate").click();
     //$(".collapse-ui-btn").click();
 
+
+
     initGraphSettings();
     init();
     animate();
@@ -442,6 +444,19 @@ function mainInit() {
         if (messageCount < 25)
             addParticles();
     }
+
+    $("#load-overlay").show();
+    // On first load get the demo graphML file
+    $.ajax({
+      url: "/graphml-demo.xml",
+      type: "GET",
+      cache: true,
+      dataType: "xml"}).done(function(data) {
+            xmlDoc=data;
+            onRender = true;
+            GraphMLViewer.Loader(xmlDoc);
+            $("#load-overlay").hide();
+      });
 }
 
 function loadGraph(graphTransform) {

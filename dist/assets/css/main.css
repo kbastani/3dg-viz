@@ -9,6 +9,17 @@
   display: none;
 }
 
+.center {
+  margin-left: 50%;
+  top: 50%;
+  text-align: center;
+  z-index: 101;
+  position: absolute;
+  font-size: 2em;
+  font-weight: bold;
+  color: #fff;
+}
+
 body {
   background-color: black !important;
 }
