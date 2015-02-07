@@ -81,7 +81,7 @@ function init() {
     myWorker.settings.geometry.computeBoundingSphere();
 
     var material = new THREE.PointCloudMaterial({
-        size: 700,
+        size: 1000,
         map: myWorker.settings.sprite,
         vertexColors: THREE.VertexColors,
         alphaTest: .05,
@@ -110,15 +110,15 @@ function init() {
         // fog — Define whether the material color is affected by global fog settings. Default is false.
 
     var lineMaterial = new THREE.LineBasicMaterial({
-      color: 0xFFFFFF,
-      linewidth: .4,
+      color: 0xEEEEEE,
+      linewidth: .5,
       scale: 1,
       dashSize: 3,
       gapSize: 1,
       vertexColors: THREE.VertexColors,
       transparent: true,
       fog: myWorker.settings.scene.fog,
-      opacity: .4});
+      opacity: .1});
 
     myWorker.settings.linesMesh = new THREE.Line( myWorker.settings.geometryLine, lineMaterial, THREE.LinePieces );
     myWorker.settings.scene.add(myWorker.settings.linesMesh);
