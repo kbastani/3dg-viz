@@ -238,9 +238,9 @@ function addParticle(e) {
 
     // colors
 
-    var vx = (((x + myWorker.settings.n2) - 1000) / 1000) + 1;
-    var vy = (((y + myWorker.settings.n2) - 1000) / 1000) + 1;
-    var vz = (((z + myWorker.settings.n2) - 1000) / 1000) + 1;
+    var vx = (((x + myWorker.settings.n2) - 1000) / 1000) + .05;
+    var vy = (((y + myWorker.settings.n2) - 1000) / 1000) + .05;
+    var vz = (((z + myWorker.settings.n2) - 1000) / 1000) + .05;
 
     // var vx = ((myWorker.settings.particles / 3) / nodeItems.length) + (x / myWorker.settings.n);
     // var vy = ((myWorker.settings.particles / 3) / nodeItems.length) + (y / myWorker.settings.n);
@@ -332,21 +332,25 @@ function getMidPointForVector(p1, p2) {
 }
 
 var rotateTime = 711597378.477;
+var frameCounter = 0;
+var lastTime;
 
 function render() {
 
-    var time = Date.now() * 0.001;
+    lastTime = lastTime || Date.now();
+    var thisTime = Date.now();
+    var diff = (thisTime - lastTime) / 3000.0;
 
     if (rotateGraph) {
-
         myWorker.settings.linesMesh.geometry.drawcalls[ 0 ].count = myWorker.settings.lineParticles / 6;
-        myWorker.settings.particleSystem.rotation.y = myWorker.settings.particleSystem.rotation.y + .005;
-        myWorker.settings.linesMesh.rotation.y = myWorker.settings.linesMesh.rotation.y + .005;
+        myWorker.settings.particleSystem.rotation.y = myWorker.settings.particleSystem.rotation.y + diff;
+        myWorker.settings.linesMesh.rotation.y = myWorker.settings.linesMesh.rotation.y + diff;
         myWorker.settings.particleSystem.geometry.attributes.position.needsUpdate = true;
         myWorker.settings.linesMesh.geometry.attributes.position.needsUpdate = true;
     }
     myWorker.settings.renderer.render(myWorker.settings.scene, myWorker.settings.camera);
 
+    lastTime = thisTime;
 }
 
 var edgeCount = 0;
