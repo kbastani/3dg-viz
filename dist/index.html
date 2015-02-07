@@ -9,6 +9,7 @@
   body {
     margin: 0px;
     overflow: hidden;
+    font-family: Helvetica,Arial,sans-serif !important;
   }
   </style>
   <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
@@ -18,6 +19,7 @@
   <script src="./assets/js/stats.min.js"></script>
   <script src="//cdn.jsdelivr.net/jstat/1.1.2/jstat.min.js"></script>
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300|Lato:400,300">
   <link href="./assets/css/main.css" rel="stylesheet"/>
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"/>
 </head>
@@ -27,7 +29,7 @@
   <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
 </button></div>
   </div>
-  <div class="panel">
+  <div id="panel">
   <div class="row">
     <div class="col-md-12">
       <label id="info" class="label-ui">NodeXL Viewer</label>
@@ -44,15 +46,39 @@
         <h3 class="panel-title">Controls</h3>
       </div>
       <div class="panel-body">
-        <div class="col-md-6">
+        <div class="row">
+        <div class="col-md-6 col-xs-6">
         <label class="label-rotate" for="rotate">Rotate:</label>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-6 col-xs-6">
         <button class="btn btn-default btn-sm" style="float: right;" id="rotate" type="button">
         <span class="rotate-status">Off</span>
       </button>
     </div>
+  </div>
       </div>
+    </div>
+  </div>
+  <div class="row controls">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Explore</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-12">
+            <p>To rotate the graph, one finger tap and drag.</p>
+            <p>To pan the graph, left + right click or 3 finger touch drag.</p>
+            <p>To zoom the graph, scroll or pinch with fingers.</p>
+          </div>
+  </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="row controls">
+    <div class="col-md-12">
+      <a href="http://nodexlgraphgallery.org/Pages/AboutNodeXL.aspx" target="_blank">More info</a>
     </div>
   </div>
   </div></div>
