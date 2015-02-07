@@ -1,11 +1,13 @@
 #ui-overlay {
-  position: absolute;
-  min-width: 20em;
-  height: 100%;
   background-color: #fff;
   border-right: 2px solid #888;
-  padding: 1em;
+  height: 100%;
   max-width: 20em;
+  min-width: 20em;
+  padding: 1em;
+  position: absolute;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .label-ui {
