@@ -4,7 +4,8 @@ var myWorker = {};
 
 myWorker.eventMessage = {};
 
-myWorker.settings = {
+function initGraphSettings() {
+  myWorker.settings = {
     fov: 45,
     cloud_count: 50000,
     particles: 0,
@@ -16,6 +17,21 @@ myWorker.settings = {
     graphScale: 500,
     n: 8000,
     n2: 8000 / 2
+  }
+}
+
+function resetGraphSettings() {
+  messageCount = 0;
+  nodeItems = [];
+  nodeMap = {};
+  edgeList = [];
+  edgeCount = 0;
+  myWorker.settings.particles = 0;
+  myWorker.settings.lineParticles = 0;
+  myWorker.settings.positions.clear();
+  myWorker.settings.colors.clear();
+  myWorker.settings.positionsLine.clear();
+  myWorker.settings.colorsLine.clear();
 }
 
 var nodeItems = [];
@@ -334,9 +350,10 @@ function getMidPointForVector(p1, p2) {
 var rotateTime = 711597378.477;
 var frameCounter = 0;
 var lastTime;
+var onRender = false;
 
 function render() {
-
+  if(onRender) {
     lastTime = lastTime || Date.now();
     var thisTime = Date.now();
     var diff = (thisTime - lastTime) / 3000.0;
@@ -351,6 +368,7 @@ function render() {
     myWorker.settings.renderer.render(myWorker.settings.scene, myWorker.settings.camera);
 
     lastTime = thisTime;
+  }
 }
 
 var edgeCount = 0;
@@ -400,36 +418,13 @@ function mainInit() {
     $("#rotate").click();
     //$(".collapse-ui-btn").click();
 
+    initGraphSettings();
     init();
     animate();
 
     myWorker.eventMessage = new Worker("worker.js");
 
     // Get JSON data
-    $.getJSON("/data.json", function (data) {
-        var items = data.nodes;
-
-        for (var i = 0; i < items.length; i++) {
-            nodeMap[items[i].id] = items[i];
-        }
-
-        for (var i = 0; i < items.length; i++) {
-            for (var j = 0; j < items[i].edges.length; j++) {
-                edgeList.push({
-                    from: items[i],
-                    to: nodeMap[items[i].edges[j]]
-                })
-            }
-        }
-
-        for (var i = 0; i < edgeList.length; i++) {
-            addEdge(edgeList[i]);
-        }
-
-        // Create edge map
-        initParticles(items);
-    });
-
     myWorker.eventMessage.onmessage = function (e) {
         for (var i = 0; i < e.data.length; i++) {
             addParticle({
@@ -447,6 +442,34 @@ function mainInit() {
         if (messageCount < 25)
             addParticles();
     }
+}
+
+function loadGraph(graphTransform) {
+
+  onRender = true;
+  $("#container").show();
+
+  var items = graphTransform;
+
+  for (var i = 0; i < items.length; i++) {
+    nodeMap[items[i].id] = items[i];
+  }
+
+  for (var i = 0; i < items.length; i++) {
+    for (var j = 0; j < items[i].edges.length; j++) {
+      edgeList.push({
+        from: items[i],
+        to: nodeMap[items[i].edges[j]]
+      })
+    }
+  }
+
+  for (var i = 0; i < edgeList.length; i++) {
+    addEdge(edgeList[i]);
+  }
+
+  // Create edge map
+  initParticles(items);
 }
 
 mainInit();

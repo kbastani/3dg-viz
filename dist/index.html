@@ -10,6 +10,7 @@
     margin: 0px;
     overflow: hidden;
     font-family: Helvetica,Arial,sans-serif !important;
+    font-size: .6em;
   }
   </style>
   <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
@@ -17,13 +18,19 @@
   <script src="./assets/js/OrbitControls.js"></script>
   <script src="./assets/js/Detector.js"></script>
   <script src="./assets/js/stats.min.js"></script>
+  <script src="./assets/js/graphml.parser.js"></script>
+  <script src="./assets/js/graph.js"></script>
+  <script src="./assets/js/saXMLUtils.js"></script>
+  <script src="./assets/js/jasny-bootstrap.min.js"></script>
   <script src="//cdn.jsdelivr.net/jstat/1.1.2/jstat.min.js"></script>
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
   <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300|Lato:400,300">
   <link href="./assets/css/main.css" rel="stylesheet"/>
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="./assets/css/jasny-bootstrap.min.css" rel="stylesheet"/>
 </head>
 <body>
+  <div id="load-overlay"></div>
   <div id="ui-overlay"><div class="row">
     <div class="col-md-12"><span id="stats-container" style="float:left;"></span> <button type="button" style="float:right;" class="collapse-ui-btn btn btn-default btn-lg">
   <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
@@ -47,14 +54,25 @@
       </div>
       <div class="panel-body">
         <div class="row">
-        <div class="col-md-6 col-xs-6">
-        <label class="label-rotate" for="rotate">Rotate:</label>
+        <div class="col-md-12 col-xs-12">
+          <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+            <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+            <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Open</span><span class="fileinput-exists">Change</span><input type="file" id="files" name="files[]" multiple /></span>
+          </div>
+        </div>
       </div>
-      <div class="col-md-6 col-xs-6">
-        <button class="btn btn-default btn-sm" style="float: right;" id="rotate" type="button">
-        <span class="rotate-status">Off</span>
-      </button>
+      <hr/>
+        <div class="row">
+        <div class="col-md-12 col-xs-12">
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label for="inputEmail3" class="col-sm-3 control-label">Rotate</label>
+              <div class="col-sm-6">
+                <button type="button" class="btn-default btn rotate rotate-status" id="rotate">Off</button>
+              </div>
+            </div>
     </div>
+
   </div>
       </div>
     </div>
@@ -67,8 +85,13 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-md-12">
+            <label class="control-label">Rotate</label>
             <p>To rotate the graph, one finger tap and drag.</p>
+          <hr/>
+          <label class="control-label">Pan</label>
             <p>To pan the graph, left + right click or 3 finger touch drag.</p>
+            <hr/>
+            <label class="control-label">Zoom</label>
             <p>To zoom the graph, scroll or pinch with fingers.</p>
           </div>
   </div>
@@ -114,6 +137,40 @@
   </script>
   <!-- end of custom shaders -->
   <script src="./assets/js/main.js"></script>
+  <script>
+  var doc;
+  var xmlDoc;
+  function handleFileSelect(evt) {
 
+    var files = evt.target.files;
+
+    if(files.length > 0) {
+      onRender = false;
+
+      // Reset the graph scene
+      resetGraphSettings();
+
+
+      $("#load-overlay").show();
+      for (var i = 0, f; f = files[i]; i++) {
+        var reader = new FileReader();
+        reader.onload = (function(theFile) {
+          return function(e) {
+            parser=new DOMParser();
+            xmlDoc=parser.parseFromString(e.target.result,"text/xml");
+            load(evt);
+          };
+        })(f);
+        reader.readAsText(f);
+      }
+    }
+  }
+  function load(e) {
+    onRender = true;
+    GraphMLViewer.Loader(xmlDoc)
+    $("#load-overlay").hide();
+  }
+  document.getElementById('files').addEventListener('change', handleFileSelect, false);
+  </script>
 </body>
 </html>
