@@ -448,13 +448,13 @@ function mainInit() {
     $("#load-overlay").show();
     // On first load get the demo graphML file
     $.ajax({
-      url: "/graphml-demo.xml",
+      url: "/data.json",
       type: "GET",
       cache: true,
-      dataType: "xml"}).done(function(data) {
-            xmlDoc=data;
+      dataType: "json"}).done(function(data) {
+
             onRender = true;
-            GraphMLViewer.Loader(xmlDoc);
+            loadGraph(data.nodes);
             $("#load-overlay").hide();
       });
 }
