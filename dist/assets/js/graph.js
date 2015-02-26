@@ -41,6 +41,7 @@ GraphMLViewer.GmlGraph.prototype.tranformToViewModel = function() {
       x: parseFloat(n.datas.filter(function(a) { return a.key == "V-X"; })[0].value || 0.0),
       y: parseFloat(n.datas.filter(function(a) { return a.key == "V-Y"; })[0].value || 0.0),
       z: parseFloat(n.datas.filter(function(a) { return a.key == "V-Followers"; })[0].value || 0.0),
+      w: parseFloat(n.datas.filter(function(a) { return a.key == "V-PageRank"; })[0].value || 0.0),
       edges: n.sourceOf.map(function(a) { return a.target.id; }).getUnique()
     };
   });
